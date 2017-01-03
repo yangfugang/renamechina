@@ -1,0 +1,28 @@
+<?php
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * @file 重命名中文文件名
+ * 主要解决在Windows环境下，中文名称会造成 move_uploaded_file 失败的问题。
+ *
+ */
+function chinese_rename_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  # 检查文件名
+  # 获取表单内所有Element
+  $els = Element::children($form);
+  foreach($els as $elName) {
+    if(isset($form[$elName]['widget'])) {
+      foreach($form[$elName]['widget'] as $w => $widget) {
+        if(is_numeric($w)) {
+          if(@$form[$elName]['widget'][$w]['#type'] == 'managed_file') {
+            $form[$elName]['widget'][$w]['#value_callback'] = [
+              'Drupal\chinese_rename\Controller\ChineseRenameController',
+              'rename_chinese_filename'
+            ];
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+name: Rename Chinese Filename
+type: module
+description: 重命名中文文件名。
+core: 8.x
+package: Custom
+dependencies:
+  - file
